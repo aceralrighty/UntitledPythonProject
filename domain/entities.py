@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from enum import Enum
 from datetime import datetime
+from enum import Enum
 from typing import Optional
 
 
@@ -35,3 +35,10 @@ class Task:
         self.status = TaskStatus.FAILED
         self.result = error
         self.completed_at = datetime.now()
+
+
+@dataclass
+class User:
+    id: Optional[int] = None
+    username: str = ""
+    password: str = ""
