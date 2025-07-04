@@ -1,15 +1,15 @@
 from dataclasses import dataclass
 from datetime import datetime
+from decimal import Decimal
 
 from pydantic import BaseModel
 from pydantic.v1 import UUID4
-from sqlalchemy import DECIMAL
 
 
 @dataclass
 class TransactionCreate(BaseModel):
     account_id: UUID4
-    amount: DECIMAL[10, 2]
+    amount: Decimal
     category: str
     description: str
     transaction_date: datetime
@@ -18,7 +18,7 @@ class TransactionCreate(BaseModel):
 @dataclass
 class TransactionResponse(BaseModel):
     id: UUID4
-    amount: DECIMAL[10, 2]
+    amount: Decimal
     category: str
     created_at: datetime
 
@@ -34,4 +34,4 @@ class User(BaseModel):
     email: str
     is_active: bool = True
     is_superuser: bool = False
-    created_at: datetime = datetime.now()
+    created_at: datetime = datetime.today()
