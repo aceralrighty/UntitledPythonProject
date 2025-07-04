@@ -1,18 +1,43 @@
-from pydantic import BaseModel
-from enum import Enum
+from datetime import datetime
+from decimal import Decimal
+from uuid import UUID
+
+from pydantic import BaseModel, EmailStr
 
 
-class TaskType(str, Enum):
-    reverse = "reverse_text"
-    compute = "compute_fib"
+class UserCreateRequest(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
 
 
-class TaskCreateRequest(BaseModel):
-    task_type: TaskType
-    payload: str
+class UserResponse(BaseModel):
+    id: UUID
+    username: str
+    email: str
+    is_active: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
 
 
-class TaskResponse(BaseModel):
-    id: int
-    status: str
-    result: str | None = None
+class TransactionCreateRequest(BaseModel):
+    account_id: UUID
+    amount: Decimal
+    category: str
+    description: str
+    transaction_date: datetime
+
+
+class TransactionResponse(BaseModel):
+    id: UUID
+    account_id: UUID
+    amount: Decimal
+    category: str
+    description: str
+    transaction_date: datetime
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

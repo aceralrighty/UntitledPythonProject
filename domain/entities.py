@@ -1,37 +1,53 @@
-from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
+from uuid import UUID
 
 from pydantic import BaseModel
-from pydantic.v1 import UUID4
 
 
-@dataclass
-class TransactionCreate(BaseModel):
-    account_id: UUID4
-    amount: Decimal
-    category: str
-    description: str
-    transaction_date: datetime
+class UserBase(BaseModel):
+    username: str
+    email: str
+    is_active: bool = True
+    is_superuser: bool = False
 
 
-@dataclass
-class TransactionResponse(BaseModel):
-    id: UUID4
-    amount: Decimal
-    category: str
+class UserCreate(UserBase):
+    password: str
+
+
+class UserResponse(UserBase):
+    id: UUID
     created_at: datetime
 
     class Config:
         from_attributes = True
 
 
-@dataclass
-class User(BaseModel):
-    id: UUID4
-    username: str
-    password: str
-    email: str
-    is_active: bool = True
-    is_superuser: bool = False
-    created_at: datetime = datetime.today()
+class User(UserBase):
+    id: UUID
+    password: str  # hashed
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class TransactionBase(BaseModel):
+    account_id: UUID
+    amount: Decimal
+    category: str
+    description: str
+    transaction_date: datetime
+
+
+class TransactionCreate(TransactionBase):
+    pass
+
+
+class TransactionResponse(TransactionBase):
+    id: UUID
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
