@@ -22,3 +22,6 @@ httpx[cli]==0.27.0  # for integration test client
 # Type checking
 mypy==1.10.0
 types-redis==4.6.0.20240425
+argon2-cffi==25.1.0
+argon2-cffi-bindings==21.2.0
+psutil==7.0.0
