@@ -26,5 +26,5 @@ argon2-cffi==25.1.0
 argon2-cffi-bindings==21.2.0
 psutil==7.0.0
 
-spacy==3.7.4
-thinc==8.2.3
+spacy==3.8.7
+thinc==8.3.6
