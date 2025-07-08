@@ -22,3 +22,17 @@ httpx[cli]==0.27.0  # for integration test client
 # Type checking
 mypy==1.10.0
 types-redis==4.6.0.20240425
+argon2-cffi==25.1.0
+argon2-cffi-bindings==21.2.0
+psutil==7.0.0
+
+spacy==3.8.7
+thinc==8.3.6
+pandas~=2.3.1
+numpy~=2.2.6
+torch~=2.7.1
+matplotlib~=3.10.3
+seaborn~=0.13.2
+datasets~=3.6.0
+scikit-learn~=1.7.0
+transformers~=4.53.1
