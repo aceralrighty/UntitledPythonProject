@@ -1,8 +1,9 @@
-import spacy
+from datasets import load_dataset
+
+ds = load_dataset("fka/awesome-chatgpt-prompts")
 
 
-def speech_tagging(text):
-    nlp = spacy.load("en_core_web_sm")
-    doc = nlp(text)
-    for entity in doc.ents:
-        print(entity.text, entity.label_)
+train_ds = ds['train']
+
+for i in range(len(train_ds)):
+    print(train_ds[i])
