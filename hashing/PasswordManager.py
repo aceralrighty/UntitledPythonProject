@@ -5,7 +5,7 @@ from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
 
-class HashedPassword:
+class PasswordManager:
 
     def __init__(self, ph: Optional[PasswordHasher] = None):
 
@@ -51,5 +51,3 @@ class HashedPassword:
             return new_hash
 
         return None
-
-print(HashedPassword().hash_password("password"))
