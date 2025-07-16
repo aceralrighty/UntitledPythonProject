@@ -10,6 +10,7 @@ from sklearn.svm import SVR
 
 warnings.filterwarnings("ignore")
 
+
 class EVPipeline:
     def __init__(self):
         self.file_path = None
@@ -156,13 +157,13 @@ class EVPipeline:
         print("🔧 Preparing data for model comparison...")
         print(f"📋 Available columns: {list(self.df.columns)}")
 
-        # Check if target column exists
+        # Check if the target column exists
         if target_column not in self.df.columns:
             print(f"❌ Target column '{target_column}' not found!")
             print(f"💡 Available columns: {list(self.df.columns)}")
             raise KeyError(f"Target column '{target_column}' not found in dataset")
 
-        # Create a copy to avoid modifying original data
+        # Create a copy to avoid modifying the original data
         df_model = self.df.copy()
 
         # Better data cleaning - handle missing values more thoroughly
@@ -237,7 +238,7 @@ class EVPipeline:
                     'Model': model_name,
                     'RMSE': round(rmse, 2),
                     'MAE': round(mae, 2),
-                    'R²': round(r2, 4) ,
+                    'R²': round(r2, 4),
                     'Training Time (s)': round(training_time, 3)
                 })
 
