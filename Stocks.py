@@ -60,7 +60,7 @@ class StockPredictionPipeline:
         """Preprocess the data for ML"""
         print("\nPreprocessing data...")
 
-        # Convert date column if it exists
+        # Convert the date column if it exists
         if 'date' in self.df.columns:
             self.df['date'] = pd.to_datetime(self.df['date'])
             self.df = self.df.sort_values('date')
@@ -71,7 +71,7 @@ class StockPredictionPipeline:
             if col in self.df.columns:
                 self.df[col] = self.df[col].fillna('unknown')
 
-        # Extract features from text (news headlines/content)
+        # Extract features from the text (news headlines/content)
         if 'title' in self.df.columns or 'content' in self.df.columns:
             self.extract_text_features()
 
@@ -85,10 +85,10 @@ class StockPredictionPipeline:
         print(f"Target variable stats: mean={self.df['target'].mean():.6f}, std={self.df['target'].std():.6f}")
 
     def extract_text_features(self):
-        """Extract features from news text using sentiment analysis"""
+        """Extract features from the news text using sentiment analysis"""
         if not self.use_sentiment:
             print("Skipping sentiment analysis for faster processing")
-            # Just add basic text features
+            # Add basic text features
             text_col = None
             for col in ['title', 'content', 'headline', 'news']:
                 if col in self.df.columns:
@@ -115,11 +115,7 @@ class StockPredictionPipeline:
 
         try:
             # Initialize sentiment analyzer
-            self.sentiment_analyzer = pipeline(
-                "sentiment-analysis",
-                model="cardiffnlp/twitter-roberta-base-sentiment-latest",  # Faster model
-                return_all_scores=True
-            )
+            self.sentiment_analyzer = pipeline
 
             # Calculate sentiment scores for sample
             sample_size = min(1000, len(self.df))  # Limit for speed
@@ -130,8 +126,9 @@ class StockPredictionPipeline:
                     result = self.sentiment_analyzer(str(text)[:256])  # Shorter text
                     scores = {item['label']: item['score'] for item in result}
                     sentiments.append(scores)
-                except:
+                except Exception as e:
                     sentiments.append({'POSITIVE': 0, 'NEGATIVE': 0, 'NEUTRAL': 1})
+                    print(f"Error in sentiment analysis: {e}")
 
             # Add sentiment features
             sentiment_df = pd.DataFrame(sentiments)
@@ -170,7 +167,7 @@ class StockPredictionPipeline:
                     if 'ts_0' in self.df.columns:
                         self.df[f'{col}_diff_from_ts0'] = self.df[col] - self.df['ts_0']
 
-                    # Rolling statistics within historical window
+                    # Rolling statistics within a historical window
                     hist_df = self.df[historical_cols].fillna(method='ffill')
                     if len(historical_cols) > 1:
                         self.df[f'{col}_historical_mean'] = hist_df.mean(axis=1)
@@ -199,7 +196,7 @@ class StockPredictionPipeline:
         print("Price features extracted")
 
     def create_target_variable(self):
-        """Create target variable for prediction"""
+        """Create a target variable for prediction"""
         # Find time series columns (ts_X format)
         ts_cols = [col for col in self.df.columns if col.startswith('ts_')]
 
@@ -214,7 +211,7 @@ class StockPredictionPipeline:
             else:
                 reference_col = ts_cols_sorted[0]
 
-            # Create target: predict price movement from ts_0 to ts_1, ts_2, etc.
+            # Create a target: predict price movement from ts_0 to ts_1, ts_2, etc.
             future_targets = ['ts_1', 'ts_2', 'ts_3', 'ts_5', 'ts_10', 'ts_15']
 
             for target_col in future_targets:
@@ -225,7 +222,7 @@ class StockPredictionPipeline:
                         reference_col]
                     print(f"Created target {target_col}: mean={self.df[f'target_{target_col}'].mean():.6f}")
 
-            # Use ts_1 as primary target (1 time step forward)
+            # Use ts_1 as the primary target (1 time step forward)
             if 'target_ts_1' in self.df.columns:
                 self.df['target'] = self.df['target_ts_1']
                 self.df['target_pct'] = self.df['target_ts_1_pct']
@@ -241,7 +238,7 @@ class StockPredictionPipeline:
         """Prepare feature matrix for ML"""
         print("Preparing features...")
 
-        # Check if target exists
+        # Check if a target exists
         if 'target' not in self.df.columns:
             print("Target variable not found. Creating dummy target.")
             self.df['target'] = 0
@@ -284,12 +281,12 @@ class StockPredictionPipeline:
         X = self.df[self.features].fillna(method='ffill').fillna(0)
         y = self.df['target'].fillna(0)
 
-        # Remove rows where target is NaN
+        # Remove rows where the target is NaN
         valid_idx = ~y.isna()
         X = X[valid_idx]
         y = y[valid_idx]
 
-        # Remove rows where target is 0 (no price change data)
+        # Remove rows where the target is 0 (no price change data)
         if y.std() > 0:  # Only if there's actual variation
             non_zero_idx = y != 0
             if non_zero_idx.sum() > 1000:  # Keep only if we have enough data
@@ -407,10 +404,10 @@ class StockPredictionPipeline:
         plt.barh(range(len(top_features)), top_features['importance'])
         plt.yticks(range(len(top_features)), top_features['feature'])
         plt.xlabel('Importance')
-        plt.title('Top 10 Feature Importances')
+        plt.title('Top 10 Feature Importance')
         plt.gca().invert_yaxis()
 
-        # Prediction vs actual (sample)
+        # Prediction vs. actual (sample)
         plt.subplot(1, 2, 2)
         X, y = self.prepare_features()
         X_scaled = self.scaler.transform(X)
@@ -457,8 +454,8 @@ class StockPredictionPipeline:
 if __name__ == "__main__":
     # Fast configuration for testing
     pipeline = StockPredictionPipeline(
-        sample_size=5000,  # Use smaller sample for speed
-        use_sentiment=False  # Skip sentiment analysis for speed
+        sample_size=5000,  # Use a smaller sample for speed
+        use_sentiment=True  # Skip sentiment analysis for speed
     )
     results = pipeline.run_pipeline()
 
