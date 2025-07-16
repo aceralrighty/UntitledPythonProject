@@ -1,23 +1,17 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask
 from twilio.rest import Client
 
-# chatbot logic
-def bot():
-    load_dotenv()
-    auth_token = os.getenv("AUTH_TOKEN")
-    account_sid = os.getenv("ACCOUNT_SID")
+load_dotenv()
+account_sid = os.getenv("ACCOUNT_SID")
+auth_token = os.getenv("AUTH_TOKEN")
+client = Client(account_sid, auth_token)
 
-    client = Client(account_sid, auth_token)
+message = client.messages.create(
+    from_='whatsapp:+14155238886',
+    body="Hello, this is a test message from Python. Thanks for using Twilio!",
+    to='whatsapp:+14698415757'
+)
 
-    message = client.messages.create(
-        from_="whatsapp:+14155238886",
-        body="Hello, there!",
-        to="whatsapp:+15005550006",
-    )
-
-    return print(message.body)
-
-bot()
+print(message.sid)
