@@ -15,3 +15,4 @@ class JWTGenerator:
         self.secret = secrets.token_bytes(self.length)
         return base64.urlsafe_b64encode(self.secret).decode()
 
+ 
