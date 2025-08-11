@@ -69,10 +69,10 @@ try:
                 driver.execute_script("arguments[0].scrollIntoView(true);", button)
                 time.sleep(1)  # Allow time for scrolling
 
-                # Try normal click
+                # Try a normal click
                 try:
                     button.click()
-                except:
+                except InterruptedError as click_error:
                     # Fallback to JavaScript click if intercepted
                     driver.execute_script("arguments[0].click();", button)
 
