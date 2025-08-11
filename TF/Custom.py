@@ -18,8 +18,7 @@ imdb_train, imdb_test = tfds.load(
 classifier.fit(
     imdb_train.take(100),
     validation_data=imdb_test.take(20),
-    epochs=3,  # BERT usually needs only 2-4 epochs
-    verbose=1
+    epochs=1,  # BERT usually needs only 2-4 epochs
 )
 
 preds = classifier.predict(["What an amazing movie!", "A total waste of time."])
